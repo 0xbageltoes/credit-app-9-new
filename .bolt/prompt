@@ -1,0 +1,216 @@
+For all designs I ask you to make, have them be beautiful, not cookie cutter. Make webpages that are fully featured and worthy for production.
+
+When using client-side hooks (useState and useEffect) in a component that's being treated as a Server Component by Next.js, always add the "use client" directive at the top of the file.
+
+Do not write code that will trigger this error: "Warning: Extra attributes from the server: %s%s""class,style"
+
+By default, this template supports JSX syntax with Tailwind CSS classes, the shadcn/ui library, React hooks, and Lucide React for icons. Do not install other packages for UI themes, icons, etc unless absolutely necessary or I request them.
+
+Use icons from lucide-react for logos.
+
+Use stock photos from unsplash where appropriate, only valid URLs you know exist.
+
+***
+
+Technical Stack:
+- Next.js 14 with App Router
+- TypeScript for type safety
+- Supabase for backend and authentication
+- Shadcn/UI for component library
+- Tailwind CSS for styling
+- TanStack Query for data fetching and caching
+- Zod for schema validation
+- Recharts for data visualization
+- jotai for global state management
+
+Core Requirements:
+1. Application Structure:
+- Implement a modular architecture supporting separate domains for:
+  * Cash flow engine
+  * Portfolio analytics
+  * Market data
+  * User settings/preferences
+  * Authentication/authorization
+  * Reporting
+
+2. Database Schema (Supabase):
+- Users table with roles and permissions
+- Organizations table for multi-tenant support
+- Instruments table for storing financial instrument definitions
+- Cash flow configurations table
+- Portfolio definitions table
+- Market data tables
+- Analysis results/cache table
+- User preferences/settings table
+
+3. Authentication/Authorization:
+- Implement Supabase Auth with email/password
+- Role-based access control (Admin, Analyst, Viewer)
+- Organization-level permissions
+- API key management for programmatic access
+
+4. Core UI Components:
+- Responsive dashboard layout
+- Navigation system with breadcrumbs
+- Data grid for financial data display
+- Interactive charts/graphs
+- Form components for financial inputs
+- Modal system for detailed views
+- Toast notifications
+- Loading states and error boundaries
+
+5. Basic Features:
+- User authentication flow
+- Dashboard shell
+- Settings panel
+- Data import/export capabilities
+- Basic financial calculator
+- Sample instrument definition form
+- Real-time calculation display
+
+6. API Structure:
+- RESTful endpoints for CRUD operations
+- WebSocket support for real-time updates
+- Rate limiting
+- Error handling middleware
+- Type-safe API routes with TypeScript
+
+7. Performance Optimization:
+- Implement dynamic imports
+- Setup proper caching strategies
+- Database indexing
+- Client-side data caching
+- Code splitting
+
+8. Development Environment:
+- ESLint configuration
+- Prettier setup
+- Husky pre-commit hooks
+- Jest testing framework
+- GitHub Actions CI/CD pipeline
+
+9. UI/UX Design System:
+
+Tailwind Configuration:
+- Custom theme extension:
+  ```typescript
+  colors: {
+    accent: {
+      DEFAULT: '#FF9666',
+      light: '#FFB494',
+      dark: '#FF784D'
+    },
+    border: {
+      DEFAULT: '#e5e7eb',
+      subtle: '#f3f4f6'
+    }
+  },
+  fontSize: {
+    'xs': ['0.75rem', '1rem'],     // 12px
+    'sm': ['0.8125rem', '1.125rem'], // 13px
+    'base': ['0.875rem', '1.25rem'],  // 14px
+    'lg': ['0.9375rem', '1.375rem'],  // 15px
+  },
+  spacing: {
+    'compact': '0.25rem',    // 4px
+    'tight': '0.375rem',     // 6px
+    'standard': '0.5rem',    // 8px
+  }
+  ```
+
+Shadcn/UI Customizations:
+- Global component modifications:
+  ```typescript
+  // components/ui/styles/globals.css
+  :root {
+    --radius: 0.25rem;
+    --font-sans: 'Inter', system-ui;
+    
+    /* Reduce default component sizes */
+    --navbar-height: 2.5rem;
+    --sidebar-width: 13rem;
+    --header-height: 2.25rem;
+    
+    /* Subtle shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  }
+  ```
+
+Layout Components:
+1. Main Layout:
+- Compact top navbar (40px height)
+- Narrow collapsible sidebar (200px default width)
+- Maximized content area
+- Status bar (24px height)
+
+2. Grid System:
+- Tight padding (8px default)
+- Minimal gaps between components (4px default)
+- Dense data grids with reduced row height
+- Auto-sizing columns based on content
+
+3. Component Modifications:
+- Tables:
+  * Reduced row height (32px)
+  * Compact padding (4px vertical, 8px horizontal)
+  * Light borders (#e5e7eb)
+  * Hover states with minimal background change
+
+- Forms:
+  * Inline layouts by default
+  * Reduced input heights (32px)
+  * Compact dropdowns
+  * Small labels (12px)
+
+- Cards:
+  * Minimal padding (12px)
+  * Very subtle borders
+  * Optional shadow on hover only
+
+- Buttons:
+  * Reduced height (32px)
+  * Compact padding (8px 12px)
+  * Ghost variant as default
+  * Orange accent only for primary actions
+
+4. Typography System:
+- Base font size: 14px
+- Secondary text: 12px
+- Headers: 15px, 14px, 13px
+- Line height: 1.4
+- Font weight: 400 default, 500 for emphasis
+- Monospace font for numerical data
+
+5. Color Usage Guidelines:
+- Background: white (#ffffff)
+- Subtle backgrounds: very light gray (#fafafa)
+- Borders: light gray (#e5e7eb)
+- Text: dark gray (#374151)
+- Secondary text: gray (#6b7280)
+- Accent: orange (#FF9666) used only for:
+  * Primary action buttons
+  * Important status indicators
+  * Select data highlighting
+  * Active state indicators
+
+6. Interactive Elements:
+- Hover states: subtle background change
+- Focus states: thin orange outline
+- Active states: slight depression effect
+- Loading states: subtle pulse animation
+
+7. Scrolling Behavior:
+- Custom scrollbars (thin, subtle)
+- Virtual scrolling for large datasets
+- Sticky headers and key controls
+- Smooth scroll animations
+
+Implementation Guidelines:
+1. Create base component variants prioritizing compact layouts
+2. Implement responsive grid system maximizing screen usage
+3. Use CSS Grid for complex layouts
+4. Implement virtual scrolling for all data tables
+5. Create utility classes for common spacing patterns
+6. Setup consistent typography scale
+7. Define reusable animations for interactions
