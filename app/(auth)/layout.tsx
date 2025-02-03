@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSupabase } from '@/lib/supabase/client';
+import { useSupabase } from '@/lib/supabase/hooks';
 import { ChartLine } from 'lucide-react';
 
 export default function AuthLayout({
@@ -14,16 +14,15 @@ export default function AuthLayout({
   const { supabase } = useSupabase();
 
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
-        router.push('/dashboard');
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        router.replace('/dashboard');
       }
-    });
+    };
 
-    return () => subscription.unsubscribe();
-  }, [supabase, router]);
+    checkAuth();
+  }, [router, supabase]);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">

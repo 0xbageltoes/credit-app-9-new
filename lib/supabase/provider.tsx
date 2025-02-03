@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { createClient } from './client';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './database.types';
@@ -21,9 +21,12 @@ export default function SupabaseProvider({
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      // Refresh the page on auth state change
-      window.location.reload();
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' && window.location.pathname.startsWith('/auth')) {
+        window.location.replace('/dashboard');
+      } else if (event === 'SIGNED_OUT' && !window.location.pathname.startsWith('/auth')) {
+        window.location.replace('/auth/sign-in');
+      }
     });
 
     return () => {

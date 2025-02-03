@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSupabase } from '@/lib/supabase/client';
+import { useSupabase } from '@/lib/supabase/hooks';
 
 export default function Home() {
   const router = useRouter();
@@ -11,15 +11,11 @@ export default function Home() {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        router.push('/dashboard');
-      } else {
-        router.push('/auth/sign-in');
-      }
+      router.replace(session ? '/dashboard' : '/auth/sign-in');
     };
 
     checkAuth();
-  }, [router, supabase.auth]);
+  }, [router, supabase]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

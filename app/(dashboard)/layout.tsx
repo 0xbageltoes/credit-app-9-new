@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSupabase } from '@/lib/supabase/hooks';
 import { Navbar } from '@/components/layout/navbar';
 import { Sidebar } from '@/components/layout/sidebar';
 import { StatusBar } from '@/components/layout/status-bar';
@@ -13,6 +14,19 @@ export default function DashboardLayout({
 }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
+  const { supabase } = useSupabase();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.replace('/auth/sign-in');
+      }
+    };
+
+    checkAuth();
+  }, [router, supabase]);
 
   return (
     <div className="min-h-screen bg-background">

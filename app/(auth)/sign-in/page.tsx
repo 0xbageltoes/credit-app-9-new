@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useSupabase } from '@/lib/supabase/client';
+import { useSupabase } from '@/lib/supabase/hooks';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -28,7 +28,7 @@ type SignInValues = z.infer<typeof signInSchema>;
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState(false);
   const { supabase } = useSupabase();
-
+  
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
