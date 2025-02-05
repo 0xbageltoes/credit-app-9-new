@@ -1,12 +1,14 @@
 'use client';
 
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, useCallback } from 'react';
 import { createClient } from './client';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './database.types';
+import { useRouter } from 'next/navigation';
 
 type SupabaseContext = {
   supabase: SupabaseClient<Database>;
+  user: any;
 };
 
 const Context = createContext<SupabaseContext | undefined>(undefined);
@@ -17,25 +19,38 @@ export default function SupabaseProvider({
   children: React.ReactNode;
 }) {
   const [supabase] = useState(() => createClient());
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
+  const refreshSession = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    setUser(session?.user ?? null);
+  }, [supabase.auth]);
 
   useEffect(() => {
+    refreshSession();
+
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN' && window.location.pathname.startsWith('/auth')) {
-        window.location.replace('/dashboard');
-      } else if (event === 'SIGNED_OUT' && !window.location.pathname.startsWith('/auth')) {
-        window.location.replace('/auth/sign-in');
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user ?? null);
+      
+      if (event === 'SIGNED_IN') {
+        router.refresh();
+        router.push('/dashboard');
+      } else if (event === 'SIGNED_OUT') {
+        router.refresh();
+        router.push('/auth/sign-in');
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase, router, refreshSession]);
 
   return (
-    <Context.Provider value={{ supabase }}>
+    <Context.Provider value={{ supabase, user }}>
       {children}
     </Context.Provider>
   );
