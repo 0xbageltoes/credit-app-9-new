@@ -9,6 +9,7 @@ const nextConfig = {
     config.resolve.fallback = { fs: false };
     return config;
   },
+  transpilePackages: ["geist"],
 };
 
 module.exports = nextConfig;
